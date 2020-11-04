@@ -76,9 +76,9 @@ def train():
                 test_data_list_path = os.path.join(opt.brainwash_dataset_root_path, 'brainwash_test.idl')
                 test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)      
     
-    print "Number of images for training: %s" %(len(train_data_list))
-    print "Number of images for val: %s" %(len(val_data_list))
-    print "Number of images for test: %s" %(len(test_data_list))
+    print("Number of images for training: %s" %(len(train_data_list)))
+    print("Number of images for val: %s" %(len(val_data_list)))
+    print("Number of images for test: %s" %(len(test_data_list)))
 
     if data_check_flag: 
         utils.check_loaded_data(train_data_list[random.randint(1,len(train_data_list))])
@@ -88,13 +88,13 @@ def train():
     # Load the train dataset
     train_dataset = Dataset(train_data_list)
     test_dataset = Dataset(val_data_list)
-    print "Load data." 
+    print("Load data.")
 
     train_dataloader = data_.DataLoader(train_dataset, batch_size=1,shuffle=True, num_workers=1)
     test_dataloader = data_.DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=1)
     # Initialize the head detector.
     head_detector_vgg16 = Head_Detector_VGG16(ratios=[1], anchor_scales=[8,16])
-    print "model construct completed"
+    print("model construct completed")
     trainer = Head_Detector_Trainer(head_detector_vgg16).cuda()
     lr_ = opt.lr
     for epoch in range(opt.epoch):
@@ -104,7 +104,7 @@ def train():
             img, bbox = img.cuda().float(), bbox_.cuda()
             img, bbox = Variable(img), Variable(bbox)
             _, _, _ = trainer.train_step(img, bbox, scale)
-            print "Forward and backward pass done."
+            print("Forward and backward pass done.")
             if (ii+1) % opt.plot_every == 0:
                 trainer.vis.plot_many(trainer.get_meter_data())
                 ori_img_ = inverse_normalize(at.tonumpy(img[0]))
